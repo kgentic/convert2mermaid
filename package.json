@@ -28,7 +28,8 @@
     "test:coverage": "vitest run --coverage",
     "start": "node dist/cli.js",
     "dev": "npx tsx src/cli.ts",
-    "analyze": "node scripts/analyze-diagram.js"
+    "analyze": "node scripts/analyze-diagram.js",
+    "prepare": "npm run build"
   },
   "bin": {
     "convert2mermaid": "./dist/cli.js"
