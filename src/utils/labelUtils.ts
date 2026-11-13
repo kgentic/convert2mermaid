@@ -90,7 +90,7 @@ const buildLegacyFlowchartNode = (nodeId: string, nodeShape: MermaidShape, label
   }
 };
 
-const escapeFlowchartLabel = (label: string): string => label.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+export const escapeFlowchartLabel = (label: string): string => label.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 
 export const shapeToConnector = (connectorShape: Shape): Shape => {
   const edge = connectorShape;

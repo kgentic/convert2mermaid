@@ -56,42 +56,47 @@ export const getShapes = (jsonObj: any): Shape[] => {
     // First pass: collect all cells and identify vertices and edges
     const cellMap = new Map<string, DrawIOCell>();
     const edgeLabels = new Map<string, string>(); // Map edge ID to label
-    const swimlanes = new Map<string, DrawIOCell>(); // Map swimlane ID to cell
-    const swimlaneChildren = new Map<string, DrawIOCell[]>(); // Map parent ID to children
+    const swimlanes = new Map<string, DrawIOCell>(); // Map container (swimlane or group) ID to cell
+    const swimlaneChildren = new Map<string, DrawIOCell[]>(); // Map container ID to its MEMBER children (class attributes/methods)
+    const containedNodes = new Set<string>(); // Children of a container that are nodes in their own right (flowchart subgraphs)
+    const edgeEndpoints = new Set<string>(); // Every cell id an edge connects to
     const rawCellMap = new Map<string, any>();
 
     for (const cell of cells) {
       const cellData = cell['$'] as DrawIOCell;
       cellMap.set(cellData.id, cellData);
       rawCellMap.set(cellData.id, cell);
-
-      // Identify swimlanes (class containers)
-      if (cellData.style && cellData.style.includes('swimlane')) {
+      if (cellData.edge === '1') {
+        if (cellData.source) edgeEndpoints.add(cellData.source);
+        if (cellData.target) edgeEndpoints.add(cellData.target);
+      }
+      if (cellData.style && isContainerStyle(cellData.style)) {
         swimlanes.set(cellData.id, cellData);
         swimlaneChildren.set(cellData.id, []);
       }
+    }
 
-      // Check if this is an edge label
-      if (cellData.connectable === '0' && cellData.vertex === '1' && cellData.parent !== '1') {
-        const parentId = cellData.parent;
-        if (parentId && cellData.value) {
-          // Check if parent is a swimlane - if so, this is a child cell
-          if (swimlanes.has(parentId)) {
-            swimlaneChildren.get(parentId)?.push(cellData);
-          } else {
-            edgeLabels.set(parentId, cellData.value);
-          }
-        }
+    // A container's child is either a MEMBER (a class attribute or method: a text or line cell, or a non-connectable
+    // cell, that no edge connects to) or a CONTAINED NODE (a flowchart step inside a group). Members are folded into
+    // the container's label; contained nodes stay shapes and the container becomes a subgraph.
+    for (const cellData of cellMap.values()) {
+      const parentId = cellData.parent;
+      if (!parentId || parentId === '0' || parentId === '1' || cellData.vertex !== '1') {
+        continue;
       }
-
-      // Collect children of swimlanes (attributes/methods in class diagrams)
-      if (cellData.parent && cellData.parent !== '0' && cellData.parent !== '1') {
-        if (swimlanes.has(cellData.parent) && cellData.vertex === '1' && cellData.value) {
-          const children = swimlaneChildren.get(cellData.parent);
-          if (children && !children.includes(cellData)) {
-            children.push(cellData);
+      if (swimlanes.has(parentId)) {
+        if (isMemberChild(cellData, edgeEndpoints)) {
+          if (cellData.value) {
+            swimlaneChildren.get(parentId)?.push(cellData);
           }
+        } else {
+          containedNodes.add(cellData.id);
         }
+        continue;
+      }
+      // Check if this is an edge label
+      if (cellData.connectable === '0' && cellData.value) {
+        edgeLabels.set(parentId, cellData.value);
       }
     }
 
@@ -112,8 +117,8 @@ export const getShapes = (jsonObj: any): Shape[] => {
         continue;
       }
 
-      // Skip children of swimlanes (they'll be processed as part of the swimlane)
-      if (cellData.parent && swimlanes.has(cellData.parent) && cellData.vertex === '1') {
+      // Skip member children of containers (they were folded into the container's label); contained nodes stay
+      if (cellData.parent && swimlanes.has(cellData.parent) && cellData.vertex === '1' && !containedNodes.has(id)) {
         continue;
       }
 
@@ -196,6 +201,22 @@ export const getShapes = (jsonObj: any): Shape[] => {
   }
 
   return shapes;
+};
+
+// draw.io containers: a swimlane (also what the UML class shape is built on) or a plain group.
+const isContainerStyle = (style: string): boolean => {
+  const first = style.split(';')[0].trim();
+  return style.includes('swimlane') || first === 'group';
+};
+
+// A member child is class content (attribute, method, separator line): a text or line cell, or a cell that cannot be
+// connected, and in every case one that no edge connects to. Anything else inside a container is a node of its own.
+const isMemberChild = (child: DrawIOCell, edgeEndpoints: Set<string>): boolean => {
+  if (edgeEndpoints.has(child.id)) {
+    return false;
+  }
+  const first = (child.style || '').split(';')[0].trim();
+  return first === 'text' || first === 'line' || child.connectable === '0';
 };
 
 const addInferredCalloutEdges = (shapes: Shape[], rawCellMap: Map<string, any>): void => {

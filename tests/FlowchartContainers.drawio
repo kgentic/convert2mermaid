@@ -1,0 +1,88 @@
+<mxfile host="localhost">
+  <diagram id="ffkkd12n-v2pd" name="Page-1">
+    <mxGraphModel dx="1413" dy="831" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="op" parent="1" style="ellipse;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;html=1;" value="Operator" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="live" parent="1" style="shape=cylinder3;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;html=1;" value="live marketplace worktree&lt;br&gt;plugins loaded in place = local main" vertex="1">
+          <mxGeometry height="80" width="150" x="30" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="orch" parent="1" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;html=1;" value="Orchestrator session&lt;br&gt;launches tickets, relays approvals" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="cc" parent="1" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;html=1;" value="Claude Code session&lt;br&gt;interactive, claude -p, Agent SDK" vertex="1">
+          <mxGeometry height="70" width="160" x="220" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="stack" parent="1" style="swimlane;fillColor=#d5e8d4;strokeColor=#82b366;whiteSpace=wrap;html=1;" value="Dark-factory stack (this repository)" vertex="1">
+          <mxGeometry height="130" width="190" x="420" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sys" parent="stack" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;html=1;" value="Routing + workflow guard&lt;br&gt;+ launcher + evidence" vertex="1">
+          <mxGeometry height="70" width="160" x="15" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;whiteSpace=wrap;html=1;" value="Anthropic API&lt;br&gt;direct from launched calls" vertex="1">
+          <mxGeometry height="60" width="160" x="420" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="aid" parent="1" style="shape=cylinder3;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;html=1;" value="aidocs vaults" vertex="1">
+          <mxGeometry height="70" width="160" x="420" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="jev" parent="1" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;whiteSpace=wrap;html=1;" value="Jev (OpenRouter)" vertex="1">
+          <mxGeometry height="50" width="120" x="660" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tg" parent="1" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;whiteSpace=wrap;html=1;" value="Telegram&lt;br&gt;card, tap, updates, typed messages" vertex="1">
+          <mxGeometry height="70" width="120" x="660" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="gh" parent="1" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;whiteSpace=wrap;html=1;" value="GitHub&lt;br&gt;pull requests, CI, issues" vertex="1">
+          <mxGeometry height="60" width="120" x="660" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="git" parent="1" style="shape=cylinder3;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;html=1;" value="git common dir&lt;br&gt;darkfactory ledger" vertex="1">
+          <mxGeometry height="70" width="120" x="660" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="e_op_cc" edge="1" parent="1" source="op" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;html=1;" target="cc" value="prompts, approve, merge, push, release">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_op_orch" edge="1" parent="1" source="op" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0;entryY=0.5;html=1;" target="orch" value="asks for work">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_orch_sys" edge="1" parent="1" source="orch" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;html=1;" target="sys" value="darkfactory launch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys_cc_start" edge="1" parent="1" source="sys" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.8;entryX=1;entryY=0.2;html=1;" target="cc" value="starts Agent SDK sessions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cc_sys" edge="1" parent="1" source="cc" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0.3;entryY=1;html=1;" target="sys" value="hook events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys_cc_deny" edge="1" parent="1" source="sys" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.7;exitY=1;entryX=1;entryY=0.8;html=1;" target="cc" value="deny, allow, position, Stop-block">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys_jev" edge="1" parent="1" source="sys" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.2;entryX=0;entryY=0.5;html=1;" target="jev" value="which skill fits?">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys_tg" edge="1" parent="1" source="sys" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.3;html=1;" target="tg" value="card, updates">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_tg_sys" edge="1" parent="1" source="tg" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.7;entryX=1;entryY=0.8;html=1;" target="sys" value="tap, typed message">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys_gh" edge="1" parent="1" source="sys" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.9;exitY=1;entryX=0;entryY=0.5;html=1;" target="gh" value="deliver PR, merge on approve, file issues">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cc_api" edge="1" parent="1" source="cc" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.8;entryX=0;entryY=0.5;html=1;" target="api" value="model calls">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys_git" edge="1" parent="1" source="sys" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0;entryY=0.5;html=1;" target="git" value="append events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cc_aid" edge="1" parent="1" source="cc" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0;entryY=0.5;html=1;" target="aid" value="write_doc, search_docs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_live_cc" edge="1" parent="1" source="live" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0.3;entryY=1;html=1;" target="cc" value="policy + aidocs plugin code">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
