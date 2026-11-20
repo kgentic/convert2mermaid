@@ -261,11 +261,13 @@ export const buildEdgeStatement = (
   return `${start} ${startArrow}${stroke}${endArrow} ${end}`;
 };
 
+// A dotted Mermaid link is `-.-`, closed by an optional head (`-.->`, `<-.->`). `-.` alone followed by a head
+// (`-.>`) is a lexical error in Mermaid 11 (measured against mermaid 11.17.2).
 const getEdgeStroke = (linePattern: number): string => {
   switch (linePattern) {
     case 2:
     case 3:
-      return '-.';
+      return '-.-';
     default:
       return '--';
   }

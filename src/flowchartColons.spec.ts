@@ -38,6 +38,19 @@ describe('Flowchart labels keep colons', () => {
     expect(mermaidCode).toContain('n0a -->|hand-off: tasks| n0b');
   });
 
+  it('writes an unlabelled dashed edge as a dotted link Mermaid can parse', async () => {
+    const mermaidCode = await convert(
+      '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>' +
+        '<mxCell id="a" value="one" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1"/>' +
+        '<mxCell id="b" value="two" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1"/>' +
+        '<mxCell id="e" style="dashed=1;endArrow=classic;html=1;" edge="1" parent="1" source="a" target="b"/>' +
+        '</root></mxGraphModel>'
+    );
+
+    expect(mermaidCode).toContain('n0a -.-> n0b');
+    expect(mermaidCode).not.toMatch(/-\.>/);
+  });
+
   it('still strips colons for the diagram types that need it', () => {
     expect(sanitizeLabel('a:b')).toBe('ab');
     expect(sanitizeFlowchartLabel('a:b')).toBe('a:b');
