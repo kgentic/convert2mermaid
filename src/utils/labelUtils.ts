@@ -1,11 +1,14 @@
 import { Shape } from '../types.js';
 import { MermaidShape, getMermaidShapeByValue } from '../shapes/flowchartShapes.js';
 
-export const sanitizeLabel = (label: string): string => {
+/**
+ * Normalises whitespace and line breaks and keeps every other character, colons included.
+ * Flowchart labels are emitted quoted (nodes) or between pipes (edges), where a colon is valid Mermaid.
+ */
+export const sanitizeFlowchartLabel = (label: string): string => {
   if (!label) return '';
 
-  // Strip colons entirely to avoid Mermaid syntax conflicts
-  let sanitized = label.replace(/:/g, '');
+  let sanitized = label;
 
   // Replace line breaks with <br/> for Mermaid
   sanitized = sanitized.replace(/\r?\n/g, '<br/>');
@@ -19,10 +22,15 @@ export const sanitizeLabel = (label: string): string => {
   return sanitized;
 };
 
+/**
+ * Strips colons entirely, for the diagram types whose Mermaid syntax treats a colon as a separator.
+ */
+export const sanitizeLabel = (label: string): string => sanitizeFlowchartLabel((label || '').replace(/:/g, ''));
+
 export const sanitizeEdgeLabel = (label: string): string => {
   if (!label) return '';
 
-  const sanitized = sanitizeLabel(label);
+  const sanitized = sanitizeFlowchartLabel(label);
 
   // If edge label has no spaces and is alphanumeric, it might cause parsing issues
   // Quote such labels to avoid syntax conflicts
@@ -49,10 +57,10 @@ export interface NodeRecord {
   NodeDef: string;
 }
 
-export const shapeToNode = (shape: Shape): NodeRecord => {
+export const shapeToNode = (shape: Shape, keepColons = false): NodeRecord => {
   const nodeId = sanitizeMermaidId(`n0${shape.Id}`);
   const nodeShape = getMermaidShapeByValue(shape.ShapeType);
-  const sanitizedLabel = sanitizeLabel(shape.Label) || ' ';
+  const sanitizedLabel = (keepColons ? sanitizeFlowchartLabel(shape.Label) : sanitizeLabel(shape.Label)) || ' ';
   const nodeDef = buildLegacyFlowchartNode(nodeId, nodeShape, sanitizedLabel);
   return { ID: nodeId, Shape: shape, NodeDef: nodeDef };
 };

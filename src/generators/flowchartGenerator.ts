@@ -4,7 +4,7 @@ import {
   shapeToConnector,
   NodeRecord,
   sanitizeEdgeLabel,
-  sanitizeLabel,
+  sanitizeFlowchartLabel,
   escapeFlowchartLabel,
 } from '../utils/labelUtils.js';
 import { getStyleStatement, buildEdgeStatement } from '../utils/styleUtils.js';
@@ -20,7 +20,7 @@ export const generateFlowchartDiagram = (diagram: Diagram): string => {
     if (shape.IsEdge) {
       edges.push(shapeToConnector(shape));
     } else {
-      nodes.push(shapeToNode(shape));
+      nodes.push(shapeToNode(shape, true));
     }
   }
 
@@ -45,7 +45,7 @@ export const generateFlowchartDiagram = (diagram: Diagram): string => {
     const indent = '  '.repeat(depth);
     const children = childrenOf.get(node.Shape.Id);
     if (children && children.length > 0) {
-      const label = escapeFlowchartLabel(sanitizeLabel(node.Shape.Label) || ' ');
+      const label = escapeFlowchartLabel(sanitizeFlowchartLabel(node.Shape.Label) || ' ');
       lines.push(`${indent}subgraph ${node.ID}["${label}"]`);
       children.forEach((child) => emit(child, depth + 1));
       lines.push(`${indent}end`);
